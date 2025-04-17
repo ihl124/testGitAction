@@ -1,7 +1,7 @@
-# Set addAssignees to 'author' to set the PR creator as the assignee.
+addReviewers: true
 addAssignees: author
 
 reviewers:
-  - ptq124
+  - ihl124
 
 numberOfReviewers: 1
