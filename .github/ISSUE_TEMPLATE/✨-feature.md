@@ -1,18 +1,10 @@
 ---
 name: "✨ Feature"
 about: 새로운 기능 추가
-title: ''
-labels: ''
+title: 'feat: '
+labels: feat
 assignees: ''
 
----
-
----
-name: "✨ Feature"
-about: "새로운 기능 추가"
-title: "[Feature] "
-labels: ["feature"]
-assignees: []
 ---
 
 ## 📄 설명

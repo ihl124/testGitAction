@@ -1,0 +1,33 @@
+name: PR 자동 처리
+
+on:
+  pull_request:
+    types: [opened, synchronize, edited]
+
+jobs:
+  auto-label-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label PR by title
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            bug: startsWith("bug:")
+            chore: startsWith("chore:")
+            docs: startsWith("docs:")
+            feat: startsWith("feat:")
+            fix: startsWith("fix:")
+            refactor: startsWith("refactor:")
+            style: startsWith("style:")
+
+  auto-size-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Calculate PR size
+        uses: pascalgn/size-label-action@v0.5.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

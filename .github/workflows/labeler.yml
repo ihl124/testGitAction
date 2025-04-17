@@ -1,0 +1,22 @@
+name: Label Issues by Title
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  label-by-title:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add labels based on issue title
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            bug: startsWith("bug:")
+            chore: startsWith("chore:")
+            docs: startsWith("docs:")
+            feat: startsWith("feat:")
+            fix: startsWith("fix:")
+            refactor: startsWith("refactor:")
+            style: startsWith("style:")

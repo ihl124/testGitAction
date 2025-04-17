@@ -1,0 +1,7 @@
+addReviewers: true
+addAssignees: author
+
+reviewers:
+  - ihl124
+
+numberOfReviewers: 1
