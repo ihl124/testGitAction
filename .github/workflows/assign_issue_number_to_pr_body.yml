@@ -26,6 +26,5 @@ jobs:
             await github.pulls.update({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
-ㅇ
                   body: newBody
               });
