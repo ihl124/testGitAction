@@ -8,6 +8,14 @@ assignees: ''
 ---
 
 ---
+name: "\U0001F41B Bug"
+about: 버그 수정
+title: "bug: "
+labels: ["bug"]
+
+---
+
+---
 name: "🐛 Bug"
 about: "버그를 제보합니다"
 title: "[Bug] "
