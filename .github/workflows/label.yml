@@ -1,0 +1,64 @@
+name: Label PR from commit messages
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  label-from-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get labels from commit messages
+        uses: actions/github-script@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const prNumber = context.payload.pull_request.number;
+
+            const commits = await github.rest.pulls.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+
+            const commitMessages = commits.data.map(c => c.commit.message);
+
+            const labelMap = {
+              feat: 'feat',
+              fix: 'fix',
+              chore: 'chore',
+              style: 'style',
+              docs: 'docs',
+              refactor: 'refactor',
+              bug: 'bug'
+            };
+
+            const labelsToAdd = new Set();
+
+            for (const message of commitMessages) {
+              for (const key in labelMap) {
+                const pattern = new RegExp(`^${key}:`, 'i'); // case-insensitive
+                if (pattern.test(message)) {
+                  labelsToAdd.add(labelMap[key]);
+                }
+              }
+            }
+
+            if (labelsToAdd.size === 0) {
+              console.log("✅ 커밋 메시지에 해당 라벨 없음");
+              return;
+            }
+
+            console.log(`라벨 추가: ${[...labelsToAdd].join(', ')}`);
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              labels: [...labelsToAdd],
+            });
