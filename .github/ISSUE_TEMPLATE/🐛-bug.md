@@ -1,9 +1,8 @@
 ---
 name: "\U0001F41B Bug"
 about: 버그 수정
-title: ''
-labels: ''
-assignees: ''
+title: "bug: "
+labels: ["bug"]
 
 ---
 
