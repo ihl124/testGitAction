@@ -19,17 +19,31 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const pr = await github.pulls.get({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                pull_number: context.issue.number
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
             });
-            const body = pr.data.body;
-            const issueNumber= pr.data.head.ref.split('-')[1];
-            const newBody = body + "\n\n" + "연관된 issue: #" + issueNumber;
-            await github.pulls.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  pull_number: context.issue.number,
-                  body: newBody
-              });
+
+            const body = pr.data.body || '';
+            const branchName = pr.data.head.ref;
+
+            // 브랜치명에서 이슈번호 추출 (예: feat-123)
+            const parts = branchName.split('-');
+            const issueNumber = parts.length > 1 ? parts[1] : null;
+
+            if (!issueNumber) {
+              console.log("이슈 번호를 브랜치명에서 찾을 수 없습니다.");
+              return;
+            }
+
+            const newBody = body.includes(`Closes #${issueNumber}`)
+              ? body // 이미 있으면 그대로
+              : `Closes #${issueNumber}\n\n${body}`;
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              body: newBody
+            });
